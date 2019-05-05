@@ -5,3 +5,5 @@ authors = ["Ferran Basora <fcsonline@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+syn = {version = "0.14", features = ["parsing", "printing", "clone-impls", "full", "extra-traits", "visit"]}
+clap = "2"
