@@ -6,13 +6,13 @@ One of the core principles of Rust is safety. To keep a healthy repository of
 packages in crates.io we need to enforce as many as possible approaches to
 detect any kind of vulnerability.
 
-Crates.io, as many other package repositories have the challange to keep all
+Crates.io, as many other package repositories have the challenge to keep all
 the available packages in a reliable and secure way. Developers and users
-of these repositories put a lot of confidence in repository mantainers.
+of these repositories put a lot of confidence in repository maintainers.
 
-With the increase use of dependencies between packages, the risk of
+With the increased use of dependencies between packages, the risk of
 vulnerability propagation increases. A small security problem in a famous
-crate, can lead to a huge problem in many projects. We have seen many security
+crate can lead to a huge problem in many projects. We have seen many security
 problems like this one in other platforms like NPM.
 
 This package tries to minimize the impact of a known set of risky use cases,
@@ -21,14 +21,14 @@ can take advantage of the static analysis to understand what is going on a
 package under the hood.
 
 The main idea for this project is to have a set of _permissions_ associated
-with some specific list of standard packages. On the other hand, through a AST
+with some specific list of standard packages. On the other hand, through an AST
 analysis, check the standard libraries used by a crate. For example, if a crate
-starts using `std::net` library, is going to adquire the `net` permission. All
-crates that use this other crate as dependency are going to adquire the `net`
-permission, inderictly though. This permission acquisition goes up to the last
+starts using `std::net` library, is going to acquire the `net` permission. All
+crates that use this other crate as dependency are going to acquire the `net`
+permission, indirectly though. This permission acquisition goes up to the last
 package.
 
-Following this approach we can build a dependency tree with all adquired
+Following this approach, we can build a dependency tree with all acquired
 permissions. This set of permissions are going to give as much information
 about packages we don't control.
 
