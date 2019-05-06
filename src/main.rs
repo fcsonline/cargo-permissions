@@ -14,6 +14,7 @@ pub struct Permissions {
   fs_permission: bool,
   net_permission: bool,
   io_permission: bool,
+  process_permission: bool,
   thread_permission: bool,
 }
 
@@ -36,6 +37,9 @@ impl<'ast> visit::Visit<'ast> for Permissions {
                 }
                 "io" => {
                   self.io_permission = true;
+                }
+                "process" => {
+                  self.process_permission = true;
                 }
                 "thread" => {
                   self.thread_permission = true;
@@ -60,6 +64,7 @@ impl fmt::Display for Permissions {
     writeln!(f, "fs: {}", self.fs_permission)?;
     writeln!(f, "net: {}", self.net_permission)?;
     writeln!(f, "io: {}", self.io_permission)?;
+    writeln!(f, "process: {}", self.process_permission)?;
     writeln!(f, "thread: {}", self.thread_permission)
   }
 }

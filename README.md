@@ -23,7 +23,7 @@ package under the hood.
 The main idea for this project is to have a set of _permissions_ associated
 with some specific list of standard packages. On the other hand, through a AST
 analysis, check the standard libraries used by a crate. For example, if a crate
-starts using `std:net` library, is going to adquire the `net` permission. All
+starts using `std::net` library, is going to adquire the `net` permission. All
 crates that use this other crate as dependency are going to adquire the `net`
 permission, inderictly though. This permission acquisition goes up to the last
 package.
@@ -44,13 +44,19 @@ This approach is inspired by permission systems in different platforms like:
 
 ## Risky use cases
 
+- Read unauthorized files
+- Do requests to untrusted domains
+- Execute unauthorized programs
 - Stolen information
 - Stolen CPU resources
+- Execute code unsafely
 
 ## Permissions
 
-**fs**: This crate uses the standard file system library
-**net**: This crate uses the standard network system library
-**io**: This crate uses the standard io system library
-**unsafe**: This crate uses unsafe code
+- **fs**: This crate uses the standard file system library
+- **net**: This crate uses the standard network system library
+- **io**: This crate uses the standard io system library
+- **process**: This crate uses the standard process system library
+- **thread**: This crate uses the standard thread system library
+- **unsafe**: This crate uses unsafe code
 
