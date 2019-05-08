@@ -6,7 +6,7 @@ use std::fs::File;
 use std::io::Read;
 
 use clap::{Arg, App};
-use syn::{visit, UseTree, ItemUse};
+use syn::{visit, Expr, ExprCall, UseTree, ItemUse};
 
 #[derive(Debug, Copy, Clone, Default)]
 pub struct Permissions {
@@ -18,7 +18,47 @@ pub struct Permissions {
   thread_permission: bool,
 }
 
+impl Permissions {
+  fn check (&mut self, token: &str) {
+    match token {
+      "fs" => {
+        self.fs_permission = true;
+      }
+      "net" => {
+        self.net_permission = true;
+      }
+      "io" => {
+        self.io_permission = true;
+      }
+      "process" => {
+        self.process_permission = true;
+      }
+      "thread" => {
+        self.thread_permission = true;
+      }
+      _ => {}
+    }
+  }
+}
+
 impl<'ast> visit::Visit<'ast> for Permissions {
+  fn visit_expr_call(&mut self, i: &ExprCall) {
+    match &*i.func {
+      Expr::Path(p) => {
+        let mut iter = p.path.segments.iter();
+
+        if let Some(stduse) = iter.next() {
+          if  let Some(stdperm) = iter.next() {
+            if stduse.ident.to_string() == "std" {
+              self.check(stdperm.ident.to_string().as_ref());
+            }
+          }
+        }
+      }
+      _ => {}
+    }
+  }
+
   fn visit_item_use(&mut self, i: &ItemUse) {
     // TODO: Process Groups
     match &i.tree {
@@ -26,26 +66,10 @@ impl<'ast> visit::Visit<'ast> for Permissions {
         if path.ident.to_string() == "std" {
           match &*path.tree {
             UseTree::Path(l2) => {
-              let foo = l2.ident.to_string();
-
-              match foo.as_ref() {
-                "fs" => {
-                  self.fs_permission = true;
-                }
-                "net" => {
-                  self.net_permission = true;
-                }
-                "io" => {
-                  self.io_permission = true;
-                }
-                "process" => {
-                  self.process_permission = true;
-                }
-                "thread" => {
-                  self.thread_permission = true;
-                }
-                _ => {}
-              }
+              self.check(l2.ident.to_string().as_ref());
+            }
+            UseTree::Name(l2) => {
+              self.check(l2.ident.to_string().as_ref());
             }
             _ => {}
           }
