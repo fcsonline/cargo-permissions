@@ -60,3 +60,19 @@ This approach is inspired by permission systems in different platforms like:
 - **thread**: This crate uses the standard thread system library
 - **unsafe**: This crate uses unsafe code
 
+## Configuration
+
+Imagine you have an application that has as dependency `clap` and `hyper`, and
+you want to control which _permissions_ you want to grant them. Then you can
+add to the `Cargo.toml` file:
+
+```
+[permissions]
+io = ["clap"]
+process = ["clap"]
+net = ["hyper"]
+```
+
+If that for whatever reason, `clap` starts using a permission like `net` that
+is not authorized to use, we are going going to raise red flags about the
+version used for the `clap` crate.
