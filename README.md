@@ -25,6 +25,15 @@ Rust developers need a tool to answer those questions about their dependencies:
 - Why a png library uses the network layer?
 - Why a http library uses the file system layer?
 
+## Possible scenarios
+
+- Read unauthorized files
+- Do requests to untrusted domains
+- Execute unauthorized programs
+- Stolen information
+- Stolen CPU resources
+- Execute code unsafely
+
 # Proof of concept
 
 The main idea for this project is to have a set of _permissions_ associated
@@ -50,15 +59,6 @@ This approach is inspired by permission systems in different platforms like:
 - [Feature policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Feature-Policy)
 - [Android permissions](https://developer.android.com/guide/topics/permissions/overview)
 
-## Possible scenarios
-
-- Read unauthorized files
-- Do requests to untrusted domains
-- Execute unauthorized programs
-- Stolen information
-- Stolen CPU resources
-- Execute code unsafely
-
 ## Proposed set of permissions
 
 The list of available permissions is not closed but this is a starting point
@@ -83,9 +83,8 @@ clap = {version = "2", permissions = ["io", "process"]}
 hyper = {version = "0.12", permissions = ["net"]}
 ```
 
-If that for whatever reason, `clap` starts using a permission like `net` that
-is not authorized to use, we are going going to raise red flags about the
-version used for the `clap` crate.
+If for whatever reason, `clap` starts using a permission like `net` that
+is not authorized to use it, Cargo is going to complain about it.
 
 ```
 $ cargo build
@@ -101,5 +100,5 @@ $ cargo build
 
    Compilation Failed!
 
-   `clap` package is not authorized to use `net` layer
+   'clap' package is not authorized to use 'net' permission!
 ```
