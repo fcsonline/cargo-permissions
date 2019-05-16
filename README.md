@@ -38,11 +38,10 @@ Rust developers need a tool to answer those questions about their dependencies:
 
 The main idea for this project is to have a set of _permissions_ associated
 with some specific list of standard packages. On the other hand, through an AST
-analysis, check the standard libraries used by a crate. For example, if a crate
-starts using `std::net` library, is going to acquire the `net` permission. All
-crates that use this other crate as dependency are going to acquire the `net`
-permission, indirectly though. This permission acquisition goes up to the last
-package.
+analysis, check the standard libraries used by a crate. For example, if the crate
+`A` starts using `std::net` library, is going to _acquire_ the `net` permission. All
+crates that use `A` crate as dependency are going to indirectly acquire the `net`
+permission. This permission acquisition goes up to the last package.
 
 Following this approach, we can build a dependency tree with all acquired
 permissions. This set of permissions are going to give as much information
@@ -95,6 +94,9 @@ $ cargo build
    Compiling ucd-util v0.1.3
    Compiling lazy_static v1.3.0
    Compiling unicode-width v0.1.5
+   ...
+   Compiling hyper v0.12.0
+   Compiling clap v2.0.0
    ...
    Compiling my-package v0.0.1 (/home/user/my-package)
 
