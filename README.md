@@ -2,34 +2,28 @@
 
 :warning: This repository is just a POC
 
-TLDR;
+TL;DR
 
 Cargo package manager needs a way to detect tampered dependecies.
 
-# Which is the problem?
+# What is the problem?
 
 Crates.io, as many other package repositories have the challenge to keep all
 the available packages in a reliable and secure way. Developers and users
 of these repositories put a lot of confidence in repository maintainers.
+
+To keep a healthy repository of packages in crates.io we need to enforce as
+many as possible approaches to detect any kind of vulnerability.
 
 With the increased use of dependencies between packages, the risk of
 vulnerability propagation increases. A small security problem in a famous
 crate can lead to a huge problem in many projects. We have seen many security
 problems like this one in other platforms like NPM.
 
+Rust developers need a tool to answer those questions about their dependencies:
+
 - Why a png library uses the network layer?
 - Why a http library uses the file system layer?
-
-# Introduction
-
-One of the core principles of Rust is safety. To keep a healthy repository of
-packages in crates.io we need to enforce as many as possible approaches to
-detect any kind of vulnerability.
-
-This package tries to minimize the impact of a known set of risky use cases,
-following the approach of source code analysis and dependency tree analysis. We
-can take advantage of the static analysis to understand what is going on a
-package under the hood.
 
 # Proof of concept
 
@@ -45,13 +39,18 @@ Following this approach, we can build a dependency tree with all acquired
 permissions. This set of permissions are going to give as much information
 about packages we don't control.
 
+This package tries to minimize the impact of a known set of risky use cases,
+following the approach of source code analysis and dependency tree analysis. We
+can take advantage of the static analysis to understand what is going on a
+package under the hood.
+
 This approach is inspired by permission systems in different platforms like:
 
 - [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
 - [Feature policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Feature-Policy)
 - [Android permissions](https://developer.android.com/guide/topics/permissions/overview)
 
-## Risky use cases
+## Possible scenarios
 
 - Read unauthorized files
 - Do requests to untrusted domains
@@ -60,7 +59,10 @@ This approach is inspired by permission systems in different platforms like:
 - Stolen CPU resources
 - Execute code unsafely
 
-## Permissions
+## Proposed set of permissions
+
+The list of available permissions is not closed but this is a starting point
+for this proof of concept:
 
 - **fs**: This crate uses the standard file system library
 - **net**: This crate uses the standard network system library
