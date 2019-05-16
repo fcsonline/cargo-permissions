@@ -45,8 +45,6 @@ Following this approach, we can build a dependency tree with all acquired
 permissions. This set of permissions are going to give as much information
 about packages we don't control.
 
-With those permissions, we can answer those questions:
-
 This approach is inspired by permission systems in different platforms like:
 
 - [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
@@ -71,20 +69,35 @@ This approach is inspired by permission systems in different platforms like:
 - **thread**: This crate uses the standard thread system library
 - **unsafe**: This crate uses unsafe code
 
-## Configuration
+# Example
 
 Imagine you have an application that has as dependency `clap` and `hyper`, and
 you want to control which _permissions_ you want to grant them. Then you can
 add to the `Cargo.toml` file:
 
 ```
-[permissions]
-default = ["self"]
-io = ["clap"]
-process = ["clap"]
-net = ["hyper"]
+[dependencies]
+clap = {version = "2", permissions = ["io", "process"]}
+hyper = {version = "0.12", permissions = ["net"]}
 ```
 
 If that for whatever reason, `clap` starts using a permission like `net` that
 is not authorized to use, we are going going to raise red flags about the
 version used for the `clap` crate.
+
+```
+$ cargo build
+   Compiling memchr v2.2.0
+   Compiling remove_dir_all v0.5.1
+   Compiling termbox-sys v0.2.11
+   Compiling cfg-if v0.1.6
+   Compiling ucd-util v0.1.3
+   Compiling lazy_static v1.3.0
+   Compiling unicode-width v0.1.5
+   ...
+   Compiling my-package v0.0.1 (/home/user/my-package)
+
+   Compilation Failed!
+
+   `clap` package is not authorized to use `net` layer
+```
